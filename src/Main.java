@@ -1,17 +1,30 @@
 import java.util.Scanner;
 
-public class Main {
-    public static void main() {
-
+public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Введите размер стола N x M (N - x направление, M - y направление): ");
-        int N = scanner.nextInt();
-        int M = scanner.nextInt();
+        Table table = new Table();
+        table.read_N_M();
 
-        Monster monster_a = new Monster();
-        monster_a.read(N, M, 5);
+        int k = 0;
+        System.out.print("Введите количество монстров: ");
+        while (k <= 0 || k > table.N * table.M) {
+            k = scanner.nextInt();
 
-        System.out.println("X: " + monster_a.x + ", Y: " + monster_a.y + ", Direction: " + monster_a.dir);
-    }
+            if (k <= 0 || k > table.N * table.M) {
+                System.out.print("Неправильный ввод! Попробуйте еще раз: ");
+            }
+        }
+
+        Monster[] monster_arr = new Monster[k];
+        for (int i = 0; i < k; i++) {
+            monster_arr[i] = new Monster();
+            monster_arr[i].read(table.N, table.M, i);
+        }
+
+        table.create_grid();
+        table.put_monsters(k, monster_arr);
+
+        int sum_with_one = table.sum_cells();
+        System.out.println("Сумма клеток, где побывал 1 монстр: " + sum_with_one);
 }
